@@ -1,0 +1,35 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.product-container {
+    width: 150px;
+}
+
+.product-container > img {
+    width: 100%;
+}
+
+main {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 50px;
+    padding-block: 10px;
+    border-bottom: 1px solid gray;
+    margin-bottom: 20px;
+}
+
+.cart {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
