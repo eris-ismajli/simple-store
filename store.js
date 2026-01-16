@@ -60,6 +60,33 @@ function renderProducts(products) {
       products = updatedProducts;
       renderProducts(updatedProducts);
     });
+
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
+    productContainer.appendChild(editButton);
+
+    editButton.addEventListener("click", () => {
+      const newTitle = prompt("Update title", product.title);
+      const newCategory = prompt("Update category", product.category);
+      const newPrice = parseInt(prompt("Update price", product.price));
+
+      if (
+        newTitle.trim() === "" ||
+        newCategory.trim() === "" ||
+        newPrice === null ||
+        isNaN(newPrice)
+      ) {
+        alert("Please provide valid data")
+        return
+      }
+
+      product.title = newTitle
+      product.category = newCategory
+      product.price = newPrice
+
+      renderProducts(products)
+    });
+
     productsHolder.appendChild(productContainer);
   });
 }
