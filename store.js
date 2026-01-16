@@ -1,9 +1,17 @@
-const cartItems = document.getElementById("cartItems")
-const cartProducts = JSON.parse(localStorage.getItem("cartProducts")) || []
+const cartItems = document.getElementById("cartItems");
+const cartProducts = JSON.parse(localStorage.getItem("cartProducts")) || [];
 
-cartItems.textContent = cartProducts.length
+const productTitleInput = document.getElementById("productTitleInput");
+const productCategoryInput = document.getElementById("productCategoryInput");
+const productPriceInput = document.getElementById("productPriceInput");
+const productImageInput = document.getElementById("productImageInput");
+const addProductBtn = document.getElementById("addProductBtn");
 
-function renderCartProducts(products) {
+let products = [];
+
+cartItems.textContent = cartProducts.length;
+
+function renderProducts(products) {
   const productsHolder = document.getElementById("productsHolder");
 
   productsHolder.innerHTML = "";
@@ -33,33 +41,66 @@ function renderCartProducts(products) {
     productContainer.appendChild(productTitle);
     productContainer.appendChild(productPrice);
 
-      const addToCart = document.createElement("button");
-      addToCart.textContent = "Add to Cart";
+    const addToCart = document.createElement("button");
+    addToCart.textContent = "Add to Cart";
 
-      addToCart.addEventListener("click", () => {
-        cartProducts.push(product);
-        localStorage.setItem("cartProducts", JSON.stringify(cartProducts));
-        cartItems.textContent = cartProducts.length;
-      });
+    addToCart.addEventListener("click", () => {
+      cartProducts.push(product);
+      localStorage.setItem("cartProducts", JSON.stringify(cartProducts));
+      cartItems.textContent = cartProducts.length;
+    });
 
-      productContainer.appendChild(addToCart);
-      const deleteButton = document.createElement("button");
-      deleteButton.textContent = "Delete";
-      productContainer.appendChild(deleteButton);
+    productContainer.appendChild(addToCart);
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    productContainer.appendChild(deleteButton);
 
-      deleteButton.addEventListener("click", () => {
-        const updatedProducts = products.filter(
-          (item, i) => i !== index
-        );
-        products = updatedProducts;
-        renderCartProducts(updatedProducts);
-      });    
+    deleteButton.addEventListener("click", () => {
+      const updatedProducts = products.filter((item, i) => i !== index);
+      products = updatedProducts;
+      renderProducts(updatedProducts);
+    });
     productsHolder.appendChild(productContainer);
   });
 }
 
+addProductBtn.addEventListener("click", () => {
+  let productTitle = productTitleInput.value;
+  const productCategory = productCategoryInput.value;
+  const productPrice = productPriceInput.value;
+  const imageFile = productImageInput.files[0];
+
+  if (
+    !imageFile ||
+    productTitle.trim() === "" ||
+    productCategory.trim() === "" ||
+    productPrice === null
+  ) {
+    alert("Please provide sufficient data");
+    return;
+  }
+
+  const newProduct = {
+    id: Date.now(),
+    title: productTitle,
+    category: productCategory,
+    price: productPrice,
+    image: URL.createObjectURL(imageFile),
+  };
+
+  products.push(newProduct);
+  renderProducts(products);
+
+  productTitleInput.value = "";
+  productCategoryInput.value = "";
+  productPriceInput.value = null;
+  productImageInput.value = "";
+});
 
 fetch("https://fakestoreapi.com/products")
-    .then(response => response.json())
-    .then(data => renderCartProducts(data))
-    .catch(error => console.log(error))
+  .then((response) => response.json())
+  .then((data) => {
+    products = data;
+    renderProducts(products);
+  })
+  .catch((error) => console.log(error));
