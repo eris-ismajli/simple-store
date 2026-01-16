@@ -3,7 +3,7 @@ const cartProducts = JSON.parse(localStorage.getItem("cartProducts")) || []
 
 cartItems.textContent = cartProducts.length
 
-function renderProducts(products) {
+function renderCartProducts(products) {
   const productsHolder = document.getElementById("productsHolder");
 
   productsHolder.innerHTML = "";
@@ -52,7 +52,7 @@ function renderProducts(products) {
           (item, i) => i !== index
         );
         products = updatedProducts;
-        renderProducts(updatedProducts);
+        renderCartProducts(updatedProducts);
       });    
     productsHolder.appendChild(productContainer);
   });
@@ -61,5 +61,5 @@ function renderProducts(products) {
 
 fetch("https://fakestoreapi.com/products")
     .then(response => response.json())
-    .then(data => renderProducts(data))
+    .then(data => renderCartProducts(data))
     .catch(error => console.log(error))
