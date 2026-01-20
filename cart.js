@@ -7,7 +7,7 @@ const totalProducts = document.getElementById("totalProducts")
 function renderCartProducts(products) {
 
   const totalPrice = products.reduce((total, product) => total + product.price, 0)
-  totalPriceEl.textContent = `Total price: $${totalPrice}`; 
+  totalPriceEl.textContent = `Total price: $${totalPrice.toFixed(2)}`; 
 
   productsHolder.innerHTML = "";
 
