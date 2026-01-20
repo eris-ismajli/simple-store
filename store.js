@@ -7,7 +7,7 @@ const productPriceInput = document.getElementById("productPriceInput");
 const productImageInput = document.getElementById("productImageInput");
 const addProductBtn = document.getElementById("addProductBtn");
 
-let products = [];
+let products = JSON.parse(localStorage.getItem("products")) || [];
 
 cartItems.textContent = cartProducts.length;
 
@@ -23,6 +23,10 @@ function renderProducts(products) {
   products.forEach((product, index) => {
     const productContainer = document.createElement("div");
     productContainer.classList.add("product-container");
+
+    productContainer.addEventListener("click", () => {
+      window.location.href = `./pages/product.html?id=${product.id}`;
+    });
 
     const productImg = document.createElement("img");
     productImg.src = product.image;
@@ -44,7 +48,8 @@ function renderProducts(products) {
     const addToCart = document.createElement("button");
     addToCart.textContent = "Add to Cart";
 
-    addToCart.addEventListener("click", () => {
+    addToCart.addEventListener("click", (e) => {
+      e.stopPropagation();
       cartProducts.push(product);
       localStorage.setItem("cartProducts", JSON.stringify(cartProducts));
       cartItems.textContent = cartProducts.length;
@@ -55,9 +60,10 @@ function renderProducts(products) {
     deleteButton.textContent = "Delete";
     productContainer.appendChild(deleteButton);
 
-    deleteButton.addEventListener("click", () => {
+    deleteButton.addEventListener("click", (e) => {
+      e.stopPropagation();
       const updatedProducts = products.filter((item, i) => i !== index);
-      products = updatedProducts;
+      localStorage.setItem("products", JSON.stringify(updatedProducts));
       renderProducts(updatedProducts);
     });
 
@@ -65,7 +71,8 @@ function renderProducts(products) {
     editButton.textContent = "Edit";
     productContainer.appendChild(editButton);
 
-    editButton.addEventListener("click", () => {
+    editButton.addEventListener("click", (e) => {
+      e.stopPropagation();
       const newTitle = prompt("Update title", product.title);
       const newCategory = prompt("Update category", product.category);
       const newPrice = parseInt(prompt("Update price", product.price));
@@ -76,15 +83,15 @@ function renderProducts(products) {
         newPrice === null ||
         isNaN(newPrice)
       ) {
-        alert("Please provide valid data")
-        return
+        alert("Please provide valid data");
+        return;
       }
 
-      product.title = newTitle
-      product.category = newCategory
-      product.price = newPrice
+      product.title = newTitle;
+      product.category = newCategory;
+      product.price = newPrice;
 
-      renderProducts(products)
+      renderProducts(products);
     });
 
     productsHolder.appendChild(productContainer);
@@ -124,10 +131,19 @@ addProductBtn.addEventListener("click", () => {
   productImageInput.value = "";
 });
 
-fetch("https://fakestoreapi.com/products")
-  .then((response) => response.json())
-  .then((data) => {
-    products = data;
-    renderProducts(products);
-  })
-  .catch((error) => console.log(error));
+renderProducts(products)
+
+localStorage.setItem("hasFetched", false)
+const hasFetched = localStorage.getItem("hasFetched")
+
+if (!hasFetched) {
+  localStorage.setItem("hasFetched", true)
+  fetch("https://fakestoreapi.com/products")
+    .then((response) => response.json())
+    .then((data) => {
+      localStorage.setItem("products", JSON.stringify(data));
+      const products = JSON.parse(localStorage.getItem("products")) || [];
+      renderProducts(products);
+    })
+    .catch((error) => console.log(error));
+}

@@ -5,7 +5,15 @@
 }
 
 .product-container {
-    width: 150px;
+    width: 180px;
+    border-radius: 10px;
+    padding-inline: 10px;
+    padding-block: 6px;
+    cursor: pointer;
+}
+
+.product-container:hover {
+    background-color: rgb(231, 231, 241);
 }
 
 .product-container > img {
