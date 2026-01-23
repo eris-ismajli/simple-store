@@ -91,6 +91,8 @@ function renderProducts(products) {
       product.category = newCategory;
       product.price = newPrice;
 
+      localStorage.setItem("products", JSON.stringify(products))
+
       renderProducts(products);
     });
 
@@ -123,6 +125,7 @@ addProductBtn.addEventListener("click", () => {
   };
 
   products.push(newProduct);
+  localStorage.setItem("products", JSON.stringify(products))
   renderProducts(products);
 
   productTitleInput.value = "";
