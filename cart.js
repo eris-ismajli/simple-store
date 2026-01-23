@@ -1,27 +1,34 @@
 const cartProducts = JSON.parse(localStorage.getItem("cartProducts")) || [];
 const productsHolder = document.getElementById("productsHolder");
-const totalPriceEl = document.getElementById("totalPrice")
-const noProductsMsg = document.getElementById("noProductsMsg")
-const totalProducts = document.getElementById("totalProducts")
+const totalPriceEl = document.getElementById("totalPrice");
+const noProductsMsg = document.getElementById("noProductsMsg");
+const totalProducts = document.getElementById("totalProducts");
 
 function renderCartProducts(products) {
-
-  const totalPrice = products.reduce((total, product) => total + product.price, 0)
-  totalPriceEl.textContent = `Total price: $${totalPrice.toFixed(2)}`; 
+  const totalPrice = products.reduce(
+    (total, product) => total + product.price,
+    0,
+  );
+  totalPriceEl.textContent = `Total price: $${totalPrice.toFixed(2)}`;
 
   productsHolder.innerHTML = "";
 
-  if (products.length === 0) noProductsMsg.textContent = "No items in your cart."
-  
+  if (products.length === 0)
+    noProductsMsg.textContent = "No items in your cart.";
+
   if (products.length > 0) {
-    totalProducts.textContent = `Total products: ${products.length}`
+    totalProducts.textContent = `Total products: ${products.length}`;
   } else {
-    totalProducts.textContent = ""
+    totalProducts.textContent = "";
   }
 
   products.forEach((product, index) => {
     const productContainer = document.createElement("div");
     productContainer.classList.add("product-container");
+
+    productContainer.addEventListener("click", () => {
+      window.location.href = `./product.html?id=${product.id}`;
+    });
 
     const productImg = document.createElement("img");
     productImg.src = product.image;
