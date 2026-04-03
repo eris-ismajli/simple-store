@@ -1,0 +1,21 @@
+.productCard {
+    width: 250px;
+    height: 250px;
+}
+
+.productCard > img {
+    width: 100%;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#productsList {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    gap: 20px;
+}
