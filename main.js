@@ -48,10 +48,28 @@ function renderProducts() {
     title.textContent = product.title;
 
     const rating = document.createElement("p");
-    rating.textContent = `rating: ${product.rating}`;
+    rating.textContent = product.rating;
+
+    const ratingProgressBg = document.createElement("div");
+    ratingProgressBg.style.width = "100%";
+    ratingProgressBg.style.height = "6px";
+    ratingProgressBg.style.backgroundColor = "#e0e0e0";
+    ratingProgressBg.style.borderRadius = "3px";
+    ratingProgressBg.style.overflow = "hidden";
+    ratingProgressBg.style.marginBottom = "8px";
+
+    const ratingProgressBar = document.createElement("div");
+    // Calculate width based on rating out of 5
+    const ratingPercentage = (product.rating / 5) * 100;
+    ratingProgressBar.style.width = `${ratingPercentage}%`;
+    ratingProgressBar.style.height = "100%";
+    ratingProgressBar.style.backgroundColor = "#4caf50";
+    ratingProgressBar.style.transition = "width 0.3s ease";
+
+    ratingProgressBg.appendChild(ratingProgressBar);
 
     const price = document.createElement("h3");
-    price.textContent = product.price;
+    price.textContent = `$${product.price}`;
 
     const addToCartBtn = document.createElement("button");
     addToCartBtn.textContent = "Add to Cart";
@@ -60,6 +78,14 @@ function renderProducts() {
       savedCartProducts.push(product);
       setCartProducts(savedCartProducts);
       cartItems.textContent = savedCartProducts.length;
+
+      addToCartBtn.style.backgroundColor = "green"
+      addToCartBtn.textContent = "Added to Cart"
+
+      setTimeout(() => {
+        addToCartBtn.style.backgroundColor = ""
+        addToCartBtn.textContent = "Add to Cart"
+      }, 2000);
     });
 
     productContainer.append(
@@ -67,6 +93,7 @@ function renderProducts() {
       category,
       title,
       rating,
+      ratingProgressBg,
       price,
       addToCartBtn,
     );
