@@ -4,7 +4,7 @@ export const products = [
     title: "Vintage Leather Backpack",
     description: "Classic full‑grain leather backpack with multiple compartments.",
     category: "Bags",
-    rating: 4.7,
+    rating: 1.7,
     image: "https://images.pexels.com/photos/257816/pexels-photo-257816.jpeg",
     price: 79.99
   },

@@ -1,4 +1,4 @@
-// https://github.com/eris-ismajli/simple-store
+// github.com/eris-ismajli/simple-store
 
 import { products } from "./data/products.js";
 
@@ -23,6 +23,22 @@ function getCartProducts() {
 
 function setCartProducts(newCartProducts) {
   localStorage.setItem(CART_PRODUCTS, JSON.stringify(newCartProducts));
+}
+
+function getRatingColor(rating) {
+  let color = ""
+
+  if (rating <= 1.5 && rating > 0) {
+    color = "red"
+  } else if (rating <= 3.5) {
+    color = "orange"
+  } else if (rating <= 5) {
+    color = "green"
+  } else {
+    color = "gray"
+  }
+
+  return color
 }
 
 const savedProducts = getProducts();
@@ -63,7 +79,7 @@ function renderProducts() {
     const ratingPercentage = (product.rating / 5) * 100;
     ratingProgressBar.style.width = `${ratingPercentage}%`;
     ratingProgressBar.style.height = "100%";
-    ratingProgressBar.style.backgroundColor = "#4caf50";
+    ratingProgressBar.style.backgroundColor = getRatingColor(product.rating);
     ratingProgressBar.style.transition = "width 0.3s ease";
 
     ratingProgressBg.appendChild(ratingProgressBar);
