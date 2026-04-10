@@ -1,44 +1,20 @@
-// github.com/eris-ismajli/simple-store
+import { getRatingColor } from "../utils/getRatingColor.js";
 
-import { products } from "./data/products.js";
-import { getRatingColor } from "./utils/getRatingColor.js";
-
-const PRODUCTS = "products";
 const CART_PRODUCTS = "cartProducts";
-
-if (!getProducts()) {
-  localStorage.setItem(PRODUCTS, JSON.stringify(products));
-}
-
-if (!getCartProducts()) {
-  localStorage.setItem(CART_PRODUCTS, JSON.stringify([]));
-}
-
-function getProducts() {
-  return JSON.parse(localStorage.getItem(PRODUCTS) || []);
-}
 
 function getCartProducts() {
   return JSON.parse(localStorage.getItem(CART_PRODUCTS) || []);
 }
 
-function setCartProducts(newCartProducts) {
-  localStorage.setItem(CART_PRODUCTS, JSON.stringify(newCartProducts));
-}
-
-const savedProducts = getProducts();
 const savedCartProducts = getCartProducts();
 
 const productsList = document.getElementById("productsList");
-const cartItems = document.getElementById("cartItems");
 
-cartItems.textContent = savedCartProducts.length;
-
-function renderProducts() {
-  savedProducts.forEach((product, index) => {
+function renderCartProducts() {
+  productsList.innerHTML = "";
+  savedCartProducts.forEach((product, index) => {
     const productContainer = document.createElement("div");
     productContainer.classList.add("productCard");
-
     const productImage = document.createElement("img");
     productImage.src = product.image;
 
@@ -72,21 +48,13 @@ function renderProducts() {
     const price = document.createElement("h3");
     price.textContent = `$${product.price}`;
 
-    const addToCartBtn = document.createElement("button");
-    addToCartBtn.textContent = "Add to Cart";
+    const removeFromCartBtn = document.createElement("button");
+    removeFromCartBtn.textContent = "Remove from cart";
 
-    addToCartBtn.addEventListener("click", () => {
-      savedCartProducts.push(product);
-      setCartProducts(savedCartProducts);
-      cartItems.textContent = savedCartProducts.length;
-
-      addToCartBtn.style.backgroundColor = "green"
-      addToCartBtn.textContent = "Added to Cart"
-
-      setTimeout(() => {
-        addToCartBtn.style.backgroundColor = ""
-        addToCartBtn.textContent = "Add to Cart"
-      }, 2000);
+    removeFromCartBtn.addEventListener("click", () => {
+      savedCartProducts.splice(index, 1);
+      localStorage.setItem("cartProducts", JSON.stringify(savedCartProducts));
+      renderCartProducts();
     });
 
     productContainer.append(
@@ -96,13 +64,11 @@ function renderProducts() {
       rating,
       ratingProgressBg,
       price,
-      addToCartBtn,
+      removeFromCartBtn,
     );
 
     productsList.appendChild(productContainer);
   });
 }
 
-renderProducts();
-
-// notepad-eris.vercel.app/js-class
+renderCartProducts();
