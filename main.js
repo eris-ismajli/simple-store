@@ -1,4 +1,4 @@
-// github.com/eris-ismajli/simple-store
+// notepad-eris.vercel.app/js-class
 
 import { products } from "./data/products.js";
 import { getRatingColor } from "./utils/getRatingColor.js";
@@ -15,29 +15,64 @@ if (!getCartProducts()) {
 }
 
 function getProducts() {
-  return JSON.parse(localStorage.getItem(PRODUCTS) || []);
+  return JSON.parse(localStorage.getItem(PRODUCTS) || "[]");
 }
 
 function getCartProducts() {
-  return JSON.parse(localStorage.getItem(CART_PRODUCTS) || []);
+  return JSON.parse(localStorage.getItem(CART_PRODUCTS) || "[]");
 }
 
 function setCartProducts(newCartProducts) {
   localStorage.setItem(CART_PRODUCTS, JSON.stringify(newCartProducts));
 }
 
-const savedProducts = getProducts();
+let savedProducts = getProducts();
 const savedCartProducts = getCartProducts();
 
 const productsList = document.getElementById("productsList");
 const cartItems = document.getElementById("cartItems");
+const categoryFilters = document.getElementById("categoryFilters");
+
+const categories = [
+  "All",
+  "Bags",
+  "Electronics",
+  "Shoes",
+  "Home & Kitchen",
+  "Apparel",
+  "Accessories",
+  "Sports",
+];
+
+function handleCategoryFilters() {
+  categories.forEach((category) => {
+    const filterButton = document.createElement("button");
+    filterButton.textContent = category;
+
+    filterButton.addEventListener("click", () => {
+      savedProducts = products.filter(
+        (product) => product.category === category || category === "All",
+      );
+      renderProducts()
+    });
+
+    categoryFilters.appendChild(filterButton);
+  });
+}
+
+handleCategoryFilters();
 
 cartItems.textContent = savedCartProducts.length;
 
 function renderProducts() {
+  productsList.innerHTML = ""
   savedProducts.forEach((product, index) => {
     const productContainer = document.createElement("div");
     productContainer.classList.add("productCard");
+
+    productContainer.addEventListener("click", () => {
+      window.location.href = `./pages/product.html?id=${product.id}`
+    })
 
     const productImage = document.createElement("img");
     productImage.src = product.image;
@@ -75,17 +110,18 @@ function renderProducts() {
     const addToCartBtn = document.createElement("button");
     addToCartBtn.textContent = "Add to Cart";
 
-    addToCartBtn.addEventListener("click", () => {
+    addToCartBtn.addEventListener("click", (event) => {
+      event.stopPropagation()
       savedCartProducts.push(product);
       setCartProducts(savedCartProducts);
       cartItems.textContent = savedCartProducts.length;
 
-      addToCartBtn.style.backgroundColor = "green"
-      addToCartBtn.textContent = "Added to Cart"
+      addToCartBtn.style.backgroundColor = "green";
+      addToCartBtn.textContent = "Added to Cart";
 
       setTimeout(() => {
-        addToCartBtn.style.backgroundColor = ""
-        addToCartBtn.textContent = "Add to Cart"
+        addToCartBtn.style.backgroundColor = "";
+        addToCartBtn.textContent = "Add to Cart";
       }, 2000);
     });
 
