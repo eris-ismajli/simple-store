@@ -14,6 +14,60 @@
     </header>
 
     <main>
+      <div
+        id="modal"
+        style="
+          display: none;
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: #ffffff;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+          text-align: center;
+          z-index: 999;
+          font-family: Arial, sans-serif;
+        "
+      >
+        <h1
+          id="modalTitle"
+          style="margin-bottom: 20px; font-size: 24px; color: #333"
+        >
+          Test
+        </h1>
+
+        <button
+          id="modalConfirmBtn"
+          style="
+            padding: 10px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+          "
+        >
+          Confirm
+        </button>
+
+        <button
+          id="modalCancelBtn"
+          style="
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f44336;
+            color: white;
+            cursor: pointer;
+          "
+        >
+          Cancel
+        </button>
+      </div>
+
       <section id="categoryFilters"></section>
       <section id="productsList"></section>
     </main>

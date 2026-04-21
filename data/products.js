@@ -1,5 +1,5 @@
 
-export const products = [
+export let products = [
   {
     id: 1,
     title: "Vintage Leather Backpack",
