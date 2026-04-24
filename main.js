@@ -6,6 +6,9 @@ import { getRatingColor } from "./utils/getRatingColor.js";
 const PRODUCTS = "products";
 const CART_PRODUCTS = "cartProducts";
 
+const DELETE = "delete";
+const EDIT = "edit";
+
 if (!getProducts()) {
   localStorage.setItem(PRODUCTS, JSON.stringify(products));
 }
@@ -41,8 +44,20 @@ const modal = document.getElementById("modal");
 const modalTitle = document.getElementById("modalTitle");
 const modalConfirmBtn = document.getElementById("modalConfirmBtn");
 const modalCancelBtn = document.getElementById("modalCancelBtn");
+const modalEditInputs = document.getElementById("modalEditInputs");
+const editTitleInput = document.getElementById("editTitleInput");
+const editCategoryInput = document.getElementById("editCategoryInput");
+
+const addTitleInput = document.getElementById("addTitleInput");
+const addPriceInput = document.getElementById("addPriceInput");
+const addCategoryInput = document.getElementById("addCategoryInput");
+const addDescriptionInput = document.getElementById("addDescriptionInput");
+const addProductBtn = document.getElementById("addProductBtn");
 
 let indexToDelete = null;
+let indexToEdit = null;
+
+let userWantsTo = "";
 
 const categories = [
   "All",
@@ -73,6 +88,11 @@ function handleCategoryFilters() {
 
 handleCategoryFilters();
 
+function toggleModalVisibility(showModal, message = "") {
+  modal.style.display = showModal ? "block" : "none";
+  modalTitle.textContent = message;
+}
+
 cartItems.textContent = savedCartProducts.length;
 
 function renderProducts() {
@@ -95,7 +115,7 @@ function renderProducts() {
     title.textContent = product.title;
 
     const rating = document.createElement("p");
-    rating.textContent = product.rating;
+    rating.textContent = product.rating && product.rating;
 
     const ratingProgressBg = document.createElement("div");
     ratingProgressBg.style.width = "100%";
@@ -142,10 +162,31 @@ function renderProducts() {
     deleteBtn.addEventListener("click", (event) => {
       event.stopPropagation();
 
-      modal.style.display = "block";
-      modalTitle.textContent = "Are you sure you want to delete this product?";
+      modalEditInputs.style.display = "none";
+
+      const modalMessage = "Are you sure you want to delete this product?";
+
+      toggleModalVisibility(true, modalMessage);
 
       indexToDelete = index;
+      userWantsTo = DELETE;
+    });
+
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+
+    editBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      const modalMessage = "Update Product";
+      toggleModalVisibility(true, modalMessage);
+
+      modalEditInputs.style.display = "block";
+      editTitleInput.value = product.title;
+      editTitleInput.focus();
+
+      indexToEdit = index;
+      userWantsTo = EDIT;
     });
 
     productContainer.append(
@@ -157,25 +198,80 @@ function renderProducts() {
       price,
       addToCartBtn,
       deleteBtn,
+      editBtn,
     );
 
     productsList.appendChild(productContainer);
   });
 }
 
+addProductBtn.addEventListener("click", () => {
+  const productTitle = addTitleInput.value;
+  const productPrice = addPriceInput.value;
+  const productCategory = addCategoryInput.value;
+  const productDescription = addDescriptionInput.value;
+
+  if (
+    productTitle.trim() === "" ||
+    productPrice.trim() === "" ||
+    productCategory.trim() === "" ||
+    productDescription.trim() === ""
+  ) {
+    alert("Please fill in all the fields")
+    return
+  }
+
+  const newProduct = {
+    id: Date.now(),
+    title: productTitle,
+    category: productCategory,
+    price: productPrice,
+    description: productDescription,
+    image: ""
+  }
+
+  savedProducts.push(newProduct)
+  setProducts(savedProducts)
+
+  renderProducts()
+
+});
+
 modalCancelBtn.addEventListener("click", () => {
-  modal.style.display = "none";
+  toggleModalVisibility(false);
+
+  indexToDelete = null;
+  indexToEdit = null;
+  userWantsTo = "";
 });
 
 modalConfirmBtn.addEventListener("click", () => {
-  modal.style.display = "none";
+  toggleModalVisibility(false);
 
-  savedProducts.splice(indexToDelete, 1);
+  if (userWantsTo === DELETE) {
+    savedProducts.splice(indexToDelete, 1);
+    indexToDelete = null;
+  } else if (userWantsTo === EDIT) {
+    const updatedTitle = editTitleInput.value;
+    const updatedCategory = editCategoryInput.value;
+
+    if (updatedTitle.trim() === "" || updatedCategory.trim() === "") {
+      alert("Please fill in all the fields");
+      return;
+    }
+
+    const productToUpdate = savedProducts[indexToEdit];
+
+    productToUpdate.title = updatedTitle;
+    productToUpdate.category = updatedCategory;
+
+    indexToEdit = null;
+  }
+
   setProducts(savedProducts);
-
   renderProducts();
 
-  indexToDelete = null
+  userWantsTo = "";
 });
 
 renderProducts();

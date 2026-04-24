@@ -34,9 +34,16 @@
         <h1
           id="modalTitle"
           style="margin-bottom: 20px; font-size: 24px; color: #333"
-        >
-          Test
-        </h1>
+        ></h1>
+
+        <div id="modalEditInputs" style="display: none;">
+          <input type="text" id="editTitleInput" placeholder="Update title" />
+          <select id="editCategoryInput">
+            <option value="bags">Bags</option>
+            <option value="electronics">Electronics</option>
+            <option value="shoes">Shoes</option>
+          </select>
+        </div>
 
         <button
           id="modalConfirmBtn"
@@ -67,6 +74,16 @@
           Cancel
         </button>
       </div>
+
+      <input type="text" id="addTitleInput" placeholder="Product title">
+      <input type="number" id="addPriceInput" placeholder="Product price">
+      <select id="addCategoryInput">
+        <option value="electronics">Electronics</option>
+        <option value="shoes">Shoes</option>
+        <option value="bags">Bags</option>
+      </select>
+      <textarea id="addDescriptionInput" placeholder="Product descripion"></textarea>
+      <button id="addProductBtn">Add Product</button>
 
       <section id="categoryFilters"></section>
       <section id="productsList"></section>
